@@ -8,6 +8,9 @@
 #import <errno.h>
 
 
+#import "MTGAsyncSocket.h" 
+
+
 %group NetTestHooks
 
 
