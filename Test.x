@@ -9,6 +9,9 @@
 #import <errno.h>
 
 
+%group NetTestHooks
+
+
 %hook NSURLSession
 - (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request {
     NSLog(@"[+] Request: %@", request);
@@ -43,7 +46,7 @@ NSString *bufferToString(const void *buf, size_t len) {
 }
 
 
-%group NetTestHooks
+
 
 %hookf(int, connect, int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
     struct sockaddr_in *in = (struct sockaddr_in *)addr;
