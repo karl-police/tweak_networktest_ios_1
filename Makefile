@@ -17,4 +17,10 @@ $(TWEAK_NAME)_FILES = $(wildcard *.x)
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
 $(TWEAK_NAME)_LOGOS_DEFAULT_GENERATOR = internal
 
+# Add frameworks
+$(TWEAK_NAME)_FRAMEWORKS = Foundation
+# if using UIKit
+$(TWEAK_NAME)_FRAMEWORKS += UIKit
+
+
 include $(THEOS_MAKE_PATH)/tweak.mk
