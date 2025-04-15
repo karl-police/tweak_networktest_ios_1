@@ -68,6 +68,11 @@ const struct addrinfo *hints, struct addrinfo **res) {
     return %orig;
 }
 
+%hookf(nw_connection_t, nw_connection_create, nw_endpoint_t endpoint, nw_parameters_t parameters) {
+    NSLog(@"[Hook] nw_connection_create called with endpoint: %p, parameters: %p", endpoint, parameters);
+    return %orig(endpoint, parameters);
+}
+
 
 %hookf(ssize_t, send, int sockfd, const void *buf, size_t len, int flags) {
     NSString *out = bufferToString(buf, len);
