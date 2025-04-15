@@ -87,7 +87,7 @@
 - (int)socket6FD;
 - (int)socket4FD;
 - (int)socketFD;
-- (void)performBlock:(CDUnknownBlockType)arg1;
+//- (void)performBlock:(CDUnknownBlockType)arg1;
 - (void)unmarkSocketQueueTargetQueue:(id)arg1;
 - (void)markSocketQueueTargetQueue:(id)arg1;
 @property _Bool autoDisconnectOnClosedReadStream;
