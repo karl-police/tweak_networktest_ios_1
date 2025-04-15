@@ -62,8 +62,7 @@ NSString *bufferToString(const void *buf, size_t len) {
     return %orig(socket, buffer, length, flags, dest_addr, addrlen);
 }
 
-%hookf(int, getaddrinfo, const char *node, const char *service,
-    const struct addrinfo *hints, struct addrinfo **res) {
+%hookf(int, getaddrinfo, const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res) {
     NSLog(@"[getaddrinfo] Resolving: %s:%s", node, service);
     return %orig;
 }
