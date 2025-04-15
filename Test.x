@@ -24,16 +24,45 @@
 %end
 
 
+%hook NSURLRequest
+- (instancetype)initWithRequest:(NSURLRequest *)request {
+    NSLog(@"[Hook] initWithRequest: %@", request);
+    return %orig;
+}
+%end
+
+%hook NSOutputStream
+- (NSInteger)write:(const uint8_t *)buffer maxLength:(NSUInteger)len {
+    NSLog(@"[NSOutputStream] Writing %lu bytes", (unsigned long)len);
+    return %orig(buffer, len);
+}
+%end
 
 
 
+// specific
+
+%hook MTGAsyncSocket
+- (void)writeData:(NSData *)data withTimeout:(double)timeout tag:(long long)tag {
+    NSLog(@"[MTGAsyncSocket][WRITE] %lu bytes: %@", (unsigned long)data.length, data);
+    %orig(data, timeout, tag);
+}
+
+- (void)setDelegate:(id<MTGAsyncSocketDelegate>)delegate {
+    NSLog(@"[MTGAsyncSocket] setDelegate: %@", NSStringFromClass([delegate class]));
+    %orig;
+}
+
+- (_Bool)connectToHost:(id)host onPort:(unsigned short)port withTimeout:(double)timeout error:(id *)err {
+    NSLog(@"[MTGAsyncSocket] Connecting to host: %@, port: %d", host, port);
+    return %orig(host, port, timeout, err);
+}
+%end
 
 
 
 // Similar thing
 // https://github.com/mintexists/ImpostorConfig/blob/main/Tweak.x
-
-
 
 NSString *bufferToString(const void *buf, size_t len) {
     NSData *data = [NSData dataWithBytes:buf length:len];
@@ -65,11 +94,6 @@ NSString *bufferToString(const void *buf, size_t len) {
 %hookf(int, getaddrinfo, const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res) {
     NSLog(@"[getaddrinfo] Resolving: %s:%s", node, service);
     return %orig;
-}
-
-%hookf(nw_connection_t, nw_connection_create, nw_endpoint_t endpoint, nw_parameters_t parameters) {
-    NSLog(@"[Hook] nw_connection_create called with endpoint: %p, parameters: %p", endpoint, parameters);
-    return %orig(endpoint, parameters);
 }
 
 
