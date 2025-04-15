@@ -62,6 +62,13 @@ NSString *bufferToString(const void *buf, size_t len) {
     return %orig(socket, buffer, length, flags, dest_addr, addrlen);
 }
 
+%hookf(int, getaddrinfo, const char *node, const char *service,
+const struct addrinfo *hints, struct addrinfo **res) {
+    NSLog(@"[getaddrinfo] Resolving: %s:%s", node, service);
+    return %orig;
+}
+
+
 %hookf(ssize_t, send, int sockfd, const void *buf, size_t len, int flags) {
     NSString *out = bufferToString(buf, len);
     NSLog(@"[Socket SEND] fd=%d, bytes=%zu\n%@", sockfd, len, out);
