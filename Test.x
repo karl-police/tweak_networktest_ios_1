@@ -63,7 +63,7 @@ NSString *bufferToString(const void *buf, size_t len) {
 }
 
 %hookf(int, getaddrinfo, const char *node, const char *service,
-const struct addrinfo *hints, struct addrinfo **res) {
+    const struct addrinfo *hints, struct addrinfo **res) {
     NSLog(@"[getaddrinfo] Resolving: %s:%s", node, service);
     return %orig;
 }
