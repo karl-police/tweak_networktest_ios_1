@@ -19,6 +19,15 @@
 
 
 
+
+
+
+
+// Similar thing
+// https://github.com/mintexists/ImpostorConfig/blob/main/Tweak.x
+
+
+
 NSString *bufferToString(const void *buf, size_t len) {
     NSData *data = [NSData dataWithBytes:buf length:len];
     NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
