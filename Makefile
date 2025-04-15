@@ -1,4 +1,4 @@
-TARGET := iphone:clang:latest:12.4
+TARGET := iphone:clang:latest:13.0
 
 # To support rootless remove "#"
 
