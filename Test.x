@@ -19,6 +19,16 @@
 
 
 
+NSString *bufferToString(const void *buf, size_t len) {
+    NSData *data = [NSData dataWithBytes:buf length:len];
+    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if (!str) {
+        return [NSString stringWithFormat:@"<non-UTF8 data (%lu bytes)>", (unsigned long)len];
+    }
+    return str;
+}
+
+
 %hookf(ssize_t, send, int sockfd, const void *buf, size_t len, int flags) {
     NSString *out = bufferToString(buf, len);
     NSLog(@"[Socket SEND] fd=%d, bytes=%zu\n%@", sockfd, len, out);
