@@ -106,9 +106,10 @@ int64_t new_function(int64_t result, int a2, int64_t a3) {
 %ctor {
     %init(NetTestHooks)
 
+    // for some reason you can keep the "0x100000000" part
     // Test
-    uintptr_t _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
-    NSLog(@"_sub_someFunc1: %04x", *(uint32_t *)_sub_someFunc1);
+    uintptr_t sub_100081808 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
+    NSLog(@"sub_100081808: %04x", *(uint32_t *)sub_100081808);
 
-    MSHookFunction( (void *)_sub_someFunc1, (void *)new_function, (void **)&old_function );
+    MSHookFunction( (void *)sub_100081808, (void *)new_function, (void **)&old_function );
 }
