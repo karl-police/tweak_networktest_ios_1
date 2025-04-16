@@ -46,7 +46,7 @@
 
 // specific
 
-%hook MTGAsyncSocket
+/*%hook MTGAsyncSocket
 - (void)writeData:(NSData *)data withTimeout:(double)timeout tag:(long long)tag {
     NSLog(@"[MTGAsyncSocket][WRITE] %lu bytes: %@", (unsigned long)data.length, data);
     %orig(data, timeout, tag);
@@ -56,7 +56,7 @@
     NSLog(@"[MTGAsyncSocket] Connecting to host: %@, port: %d", host, port);
     return %orig(host, port, timeout, err);
 }
-%end
+%end*/
 
 
 
