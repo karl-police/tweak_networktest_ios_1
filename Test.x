@@ -125,5 +125,5 @@ void new_function(int result, int a2, int a3) {
     %init(NetTestHooks)
 
     // Test
-    MSHookFunction((int*)(_dyld_get_image_vmaddr_slide(0) + 0x81848), (int *)new_function, (int **)&old_function);
+    MSHookFunction((void *)(_dyld_get_image_vmaddr_slide(0) + 0x81848), (void *)new_function, (void **)&old_function);
 }
