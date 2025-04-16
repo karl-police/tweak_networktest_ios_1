@@ -98,7 +98,7 @@ NSString *bufferToString(const void *buf, size_t len) {
 
 int64_t (*old_function)(int64_t result, int a2, int64_t a3);
 int64_t new_function(int64_t result, int a2, int64_t a3) {
-    NSLog(@"[new_function_test] %d | %d | %d", result, a2, a3);
+    NSLog(@"[new_function_test] %lld | %d | %lld", result, a2, a3);
     return old_function(result, a2, a3); // orig
 }
 
