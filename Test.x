@@ -97,8 +97,8 @@ FuncType targetFunction = NULL;
 
 %hook ControlsWidget
 
-(void)setupControls {%orig;
-
+(void)setupControls {
+    %orig;
     // Create the button
     [[SimpleButtonManager sharedInstance] createButton];
 }
