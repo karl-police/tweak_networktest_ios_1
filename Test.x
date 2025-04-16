@@ -7,8 +7,6 @@
 #import <pthread.h>
 #import <errno.h>
 
-#import <objc/NSObject.h>
-
 #import <mach-o/dyld.h>
 
 
@@ -41,23 +39,6 @@
     return %orig(buffer, len);
 }
 %end
-
-
-
-// specific
-
-%hook MTGAsyncSocket
-- (void)writeData:(NSData *)data withTimeout:(double)timeout tag:(long long)tag {
-    NSLog(@"[MTGAsyncSocket][WRITE] %lu bytes: %@", (unsigned long)data.length, data);
-    %orig(data, timeout, tag);
-}
-
-- (_Bool)connectToHost:(id)host onPort:(unsigned short)port withTimeout:(double)timeout error:(id *)err {
-    NSLog(@"[MTGAsyncSocket] Connecting to host: %@, port: %d", host, port);
-    return %orig(host, port, timeout, err);
-}
-%end
-
 
 
 // Similar thing
