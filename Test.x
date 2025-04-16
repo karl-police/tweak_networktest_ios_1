@@ -46,7 +46,7 @@
 
 // specific
 
-/*%hook MTGAsyncSocket
+%hook MTGAsyncSocket
 - (void)writeData:(NSData *)data withTimeout:(double)timeout tag:(long long)tag {
     NSLog(@"[MTGAsyncSocket][WRITE] %lu bytes: %@", (unsigned long)data.length, data);
     %orig(data, timeout, tag);
@@ -56,7 +56,7 @@
     NSLog(@"[MTGAsyncSocket] Connecting to host: %@, port: %d", host, port);
     return %orig(host, port, timeout, err);
 }
-%end*/
+%end
 
 
 
@@ -125,5 +125,5 @@ void new_function(int result, int a2, int a3) {
     %init(NetTestHooks)
 
     // Test
-    MSHookFunction((void *)(_dyld_get_image_vmaddr_slide(0) + 0x81848), (void *)new_function, (void **)&old_function);
+    //MSHookFunction((void *)(_dyld_get_image_vmaddr_slide(0) + 0x81848), (void *)new_function, (void **)&old_function);
 }
