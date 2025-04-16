@@ -84,7 +84,8 @@ FuncType targetFunction = NULL;
 (void)handlePan:(UIPanGestureRecognizer *)panGestureRecognizer {// Handle the dragging
   if (self.button) {
       CGPoint translation = [panGestureRecognizer translationInView:self.button.superview];
-      self.button.center = CGPointMake(self.button.center.x + translation.x, self.button.center.y + translation.y);[panGestureRecognizer setTranslation:CGPointZero inView:self.button.superview];}
+      self.button.center = CGPointMake(self.button.center.x + translation.x, self.button.center.y + translation.y);[panGestureRecognizer setTranslation:CGPointZero inView:self.button.superview];
+    }
 }
 
 @end
