@@ -12,7 +12,107 @@
 #import <mach-o/dyld.h>
 
 
+typedef int64_t (*FuncType)(int64_t a1, int64_t a2, int64_t a3);
+FuncType targetFunction = NULL;
+
+
 %group NetTestHooks
+
+@interface SimpleButtonManager : NSObject
+
+@property (nonatomic, strong) UIButton button;  // Main button
+@property (nonatomic, strong) UIPanGestureRecognizerpanGestureRecognizer;  // Dragging gesture recognizer
+
++ (instancetype)sharedInstance;
+(void)createButton;
+(void)removeButton;
+(void)buttonTouchedDown;
+(void)buttonTouchedUp;
+
+@end
+
+@implementation SimpleButtonManager
+
++ (instancetype)sharedInstance {
+    static SimpleButtonManager instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[SimpleButtonManager alloc] init];
+    });
+    return instance;
+}
+
+(void)createButton {
+  if (!self.button) {// Create the main button
+      self.button = [UIButton buttonWithType:UIButtonTypeCustom];
+      self.button.frame = CGRectMake(11, 198, 82, 82);
+      self.button.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.37];
+      self.button.layer.cornerRadius = 10; // Not circular, slightly rounded corners
+      self.button.layer.masksToBounds = YES;
+      self.button.layer.borderColor = [UIColor colorWithWhite:0.45 alpha:1.0].CGColor;
+      self.button.layer.borderWidth = 3.33;
+      self.button.alpha = 0.45;
+
+        [self.button addTarget:self action:@selector(buttonTouchedDown) forControlEvents:UIControlEventTouchDown];
+        [self.button addTarget:self action:@selector(buttonTouchedUp) forControlEvents:UIControlEventTouchUpInside];
+        [self.button addTarget:self action:@selector(buttonTouchedUp) forControlEvents:UIControlEventTouchUpOutside];
+
+        // Add dragging gesture
+        self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        [self.button addGestureRecognizer:self.panGestureRecognizer];
+
+        UIWindowwindow = [UIApplication sharedApplication].keyWindow;
+        [window addSubview:self.button];
+    }
+}
+(void)removeButton {
+  if (self.button) {[self.button removeGestureRecognizer:self.panGestureRecognizer];[self.button removeFromSuperview];
+      self.button = nil; // Clear reference}
+}
+
+(void)buttonTouchedDown {// Change the border color when the button is tapped
+  self.button.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
+
+    NSLog(@"Hello");
+    targetFunction(1,2,3);
+}
+
+(void)buttonTouchedUp {// Reset the border color when the button is released
+  self.button.layer.borderColor = [UIColor colorWithWhite:0.45 alpha:1.0].CGColor;
+}
+
+(void)handlePan:(UIPanGestureRecognizer *)panGestureRecognizer {// Handle the dragging
+  if (self.button) {
+      CGPoint translation = [panGestureRecognizer translationInView:self.button.superview];
+      self.button.center = CGPointMake(self.button.center.x + translation.x, self.button.center.y + translation.y);[panGestureRecognizer setTranslation:CGPointZero inView:self.button.superview];}
+}
+
+@end
+
+%hook ControlsWidget
+
+(void)setupControls {%orig;
+
+    // Create the button
+    [[SimpleButtonManager sharedInstance] createButton];
+}
+
+%end
+
+%hook MenuMain
+
+(bool)isRootState {
+  bool result = %orig;
+
+    // Remove the button when isRootState is called
+    [[SimpleButtonManager sharedInstance] removeButton];
+
+    return result;
+}
+
+%end
+// eeee
+
 
 
 %hook NSURLSession
@@ -125,5 +225,8 @@ int64_t new_func2(int64_t a1) {
         uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
         NSLog(@"_sub_func2: %04x", *(uint32_t *)_sub_func2);
         MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
+
+        uintptr_t call_test1 = (_dyld_get_image_vmaddr_slide(0) + 0x100194E6C);
+        targetFunction = (FuncType)(call_test1);
     }
 }
