@@ -66,28 +66,7 @@ FuncType targetFunction = NULL;
         [window addSubview:self.button];
     }
 }
-(void)removeButton {
-  if (self.button) {[self.button removeGestureRecognizer:self.panGestureRecognizer];[self.button removeFromSuperview];
-      self.button = nil; // Clear reference}
-}
 
-(void)buttonTouchedDown {// Change the border color when the button is tapped
-  self.button.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
-
-  //NSLog(@"Hello");
-  targetFunction(1,2,3);
-}
-
-(void)buttonTouchedUp {// Reset the border color when the button is released
-  self.button.layer.borderColor = [UIColor colorWithWhite:0.45 alpha:1.0].CGColor;
-}
-
-(void)handlePan:(UIPanGestureRecognizer *)panGestureRecognizer {// Handle the dragging
-  if (self.button) {
-      CGPoint translation = [panGestureRecognizer translationInView:self.button.superview];
-      self.button.center = CGPointMake(self.button.center.x + translation.x, self.button.center.y + translation.y);[panGestureRecognizer setTranslation:CGPointZero inView:self.button.superview];
-    }
-}
 
 @end
 
