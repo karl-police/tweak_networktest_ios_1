@@ -61,8 +61,20 @@ FuncType targetFunction = NULL;
       self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
       [self.button addGestureRecognizer:self.panGestureRecognizer];
 
-      UIWindow *window = [UIApplication sharedApplication].keyWindow;
-      [window addSubview:self.button];
+      // Using connectedScenes to get the window in iOS 13 and later
+      UIWindow *window = nil;
+      for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+          if (scene.activationState == UISceneActivationStateForegroundActive) {
+              window = ((UIWindowScene *)scene).windows.firstObject;
+              break;
+          }
+      }
+
+      if (window) {
+          [window addSubview:self.button];
+      } else {
+          NSLog(@"No active window found.");
+      }
   }
 }
 
