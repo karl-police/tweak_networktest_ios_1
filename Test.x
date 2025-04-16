@@ -67,6 +67,11 @@ FuncType targetFunction = NULL;
     }
 }
 
+(void)removeButton {
+  if (self.button) {[self.button removeGestureRecognizer:self.panGestureRecognizer];[self.button removeFromSuperview];
+      self.button = nil; // Clear reference
+    }
+}
 
 @end
 
