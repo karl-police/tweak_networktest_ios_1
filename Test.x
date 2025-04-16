@@ -108,10 +108,10 @@ int64_t new_function(int64_t result, int a2, int64_t a3) {
 
     // Test
     uintptr_t _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x81848);
-    NSMutableString *strHex = [NSMutableString stringWithString:@"[+] Bytes: "];
+    /*NSMutableString *strHex = [NSMutableString stringWithString:@"[+] Bytes: "];
     for (int i = 0; i < 16; i++) {
         [strHex appendFormat:@"%02x ", ((uint8_t *)_sub_someFunc1)[i]];
     }
-    NSLog(@"%@", strHex);
+    NSLog(@"%@", strHex);*/
     //MSHookFunction( (void *)_sub_someFunc1, (void *)new_function, (void **)&old_function );
 }
