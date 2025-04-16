@@ -8,6 +8,7 @@
 #import <errno.h>
 #import <stdint.h>
 
+#import <substrate.h>
 #import <mach-o/dyld.h>
 
 
