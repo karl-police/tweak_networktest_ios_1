@@ -94,6 +94,26 @@ FuncType targetFunction = NULL;
 
 @end
 
+%hook ControlsWidget
+(void)setupControls {
+    %orig;
+    // Create the button
+    [[SimpleButtonManager sharedInstance] createButton];
+}
+%end
+
+%hook MenuMain
+(bool)isRootState {
+  bool result = %orig;
+
+    // Remove the button when isRootState is called
+    [[SimpleButtonManager sharedInstance] removeButton];
+
+    return result;
+}
+%end
+// eeeee
+
 
 
 %hook NSURLSession
