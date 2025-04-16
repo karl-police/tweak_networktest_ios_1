@@ -102,10 +102,10 @@ int64_t new_function(int64_t result, int a2, int64_t a3) {
     return old_function(result, a2, a3); // orig
 }
 
-int64_t (*old_func2)(int64_t a1, int64_t a2, int64_t a3);
-int64_t new_func2(int64_t a1, int64_t a2, int64_t a3) {
-    NSLog(@"[new_func2_test] %lld | %lld | %lld", a1, a2, a3);
-    return old_func2(a1, a2, a3); // orig
+int64_t (*old_func2)(int64_t a1);
+int64_t new_func2(int64_t a1) {
+    NSLog(@"[new_func2_test] %lld", a1);
+    return old_func2(a1); // orig
 }
 
 
@@ -118,7 +118,7 @@ int64_t new_func2(int64_t a1, int64_t a2, int64_t a3) {
     NSLog(@"_sub_func1: %04x", *(uint32_t *)_sub_func1);
     MSHookFunction( (void *)_sub_func1, (void *)new_function, (void **)&old_function );
 
-    uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x100194E6C);
+    uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
     NSLog(@"_sub_func2: %04x", *(uint32_t *)_sub_func2);
     MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
 }
