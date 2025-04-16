@@ -238,7 +238,7 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
 %ctor {
     %init(NetTestHooks)
 
-    MSHookFunction(&objc_msgSend, (void*)&replacementObjc_msgSend, &orig_objc_msgSend);
+    MSHookFunction(&objc_msgSend, (void*)replacementObjc_msgSend, (void**)&orig_objc_msgSend);
 
     @autoreleasepool
     {
