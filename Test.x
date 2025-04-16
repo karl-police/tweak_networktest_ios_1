@@ -11,8 +11,10 @@
 #import <substrate.h>
 #import <mach-o/dyld.h>
 
+#import <string>
 
-typedef int64_t (*FuncType)(int64_t a1, int64_t a2, int64_t a3);
+
+typedef int64_t (*FuncType)(int64_t a1, basic_string<char, std::char_traits<char>, std::allocator<char>> a2, int64_t a3);
 FuncType targetFunction = NULL;
 
 
@@ -89,7 +91,7 @@ FuncType targetFunction = NULL;
 - (void)buttonTouchedDown {
   self.button.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
   NSLog(@"Hello");
-  targetFunction(1, 2, 3);
+  //targetFunction(1, 2, 3);
 }
 
 - (void)buttonTouchedUp {
@@ -209,7 +211,6 @@ NSString *bufferToString(const void *buf, size_t len) {
 
 %end // end group
 
-
 int64_t (*old_function)(int64_t result, int a2, int64_t a3);
 int64_t new_function(int64_t result, int a2, int64_t a3) {
     NSLog(@"[new_function_test] %lld | %d | %lld", result, a2, a3);
@@ -223,9 +224,18 @@ int64_t new_func2(int64_t a1) {
 }
 
 
+// The original objc_msgSend.
+static id (*orig_objc_msgSend)(id, SEL, ...) = NULL;
+
+id replacementObjc_msgSend(id self, SEL _sel, ...) {
+    NSLog(@"[objc_msgSend Hook] [%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_sel));
+    return %orig;
+}
+
 %ctor {
     %init(NetTestHooks)
 
+    MSHookFunction(&objc_msgSend, (id (*)(id, SEL, ...))&replacementObjc_msgSend, &orig_objc_msgSend);
 
     @autoreleasepool
     {
