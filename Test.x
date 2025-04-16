@@ -116,7 +116,7 @@ NSString *bufferToString(const void *buf, size_t len) {
 
 int (*old_function)(int result, int a2, int a3);
 int new_function(int result, int a2, int a3) {
-    NSLog(@"[new_function_test] %@ | %@ | %@", result, a2, a3);
+    NSLog(@"[new_function_test] %d | %d | %d", result, a2, a3);
     return old_function(result, a2, a3); // orig
 }
 
