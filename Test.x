@@ -6,6 +6,7 @@
 #import <netdb.h>
 #import <pthread.h>
 #import <errno.h>
+#import <stdint.h>
 
 #import <mach-o/dyld.h>
 
@@ -95,8 +96,8 @@ NSString *bufferToString(const void *buf, size_t len) {
 %end // end group
 
 
-__int64 (*old_function)(__int64 result, int a2, __int64 a3);
-__int64 new_function(__int64 result, int a2, __int64 a3) {
+int64_t (*old_function)(int64_t result, int a2, int64_t a3);
+int64_t new_function(int64_t result, int a2, int64_t a3) {
     NSLog(@"[new_function_test] %d | %d | %d", result, a2, a3);
     return old_function(result, a2, a3); // orig
 }
