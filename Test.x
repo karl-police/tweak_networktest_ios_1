@@ -108,7 +108,8 @@ int64_t new_function(int64_t result, int a2, int64_t a3) {
 
     // Test
     uintptr_t _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x81848);
-    _sub_someFunc1 = _sub_someFunc1;
+    NSLog(@"_sub_someFunc1: 0x%lx", _sub_someFunc1);
+
     /*NSMutableString *strHex = [NSMutableString stringWithString:@"[+] Bytes: "];
     for (int i = 0; i < 16; i++) {
         [strHex appendFormat:@"%02x ", ((uint8_t *)_sub_someFunc1)[i]];
