@@ -9,6 +9,9 @@
 
 #import <objc/NSObject.h>
 
+#import <mach-o/dyld.h>
+
+
 %group NetTestHooks
 
 
@@ -43,22 +46,17 @@
 
 // specific
 
-/*%hook MTGAsyncSocket
+%hook MTGAsyncSocket
 - (void)writeData:(NSData *)data withTimeout:(double)timeout tag:(long long)tag {
     NSLog(@"[MTGAsyncSocket][WRITE] %lu bytes: %@", (unsigned long)data.length, data);
     %orig(data, timeout, tag);
-}
-
-- (void)setDelegate:(id<MTGAsyncSocketDelegate>)delegate {
-    NSLog(@"[MTGAsyncSocket] setDelegate: %@", NSStringFromClass([delegate class]));
-    %orig;
 }
 
 - (_Bool)connectToHost:(id)host onPort:(unsigned short)port withTimeout:(double)timeout error:(id *)err {
     NSLog(@"[MTGAsyncSocket] Connecting to host: %@, port: %d", host, port);
     return %orig(host, port, timeout, err);
 }
-%end*/
+%end
 
 
 
@@ -116,6 +114,16 @@ NSString *bufferToString(const void *buf, size_t len) {
 %end // end group
 
 
+int (*old_function)(int result, int a2, int a3);
+int new_function(int result, int a2, int a3) {
+    NSLog(@"[new_function_test] %@ | %@ | %@", result, a2, a3);
+    return old_function(result, a2, a3); // orig
+}
+
+
 %ctor {
     %init(NetTestHooks)
+
+    // Test
+    MSHookFunction((int*)(_dyld_get_image_vmaddr_slide(0) + 0x81848), (int *)new_function, (int **)&old_function);
 }
