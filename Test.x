@@ -107,7 +107,7 @@ int64_t new_function(int64_t result, int a2, int64_t a3) {
     %init(NetTestHooks)
 
     // Test
-    uintptr_t _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x81848);
+    uintptr_t _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
     NSLog(@"_sub_someFunc1: %04x", *(uint32_t *)_sub_someFunc1);
 
     /*NSMutableString *strHex = [NSMutableString stringWithString:@"[+] Bytes: "];
