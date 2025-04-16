@@ -232,7 +232,7 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
     va_start(args, _sel);
     id result = orig_objc_msgSend(self, _sel, args);
     va_end(args);
-    return result
+    return result;
 }
 
 %ctor {
