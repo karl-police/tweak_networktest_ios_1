@@ -229,7 +229,8 @@ static id (*orig_objc_msgSend)(id, SEL, ...) = NULL;
 
 id replacementObjc_msgSend(id self, SEL _sel, ...) {
     NSLog(@"[objc_msgSend Hook] [%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_sel));
-    return %orig;
+
+    return orig_objc_msgSend(self, _sel, ...);
 }
 
 %ctor {
