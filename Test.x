@@ -12,7 +12,7 @@
 #import <mach-o/dyld.h>
 
 
-typedef int64_t (*FuncType)(int64_t a1, basic_string<char, std::char_traits<char>, std::allocator<char>> a2, int64_t a3);
+typedef int64_t (*FuncType)(int64_t a1, int64_t a2, int64_t a3);
 FuncType targetFunction = NULL;
 
 
