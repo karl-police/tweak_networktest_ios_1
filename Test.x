@@ -114,8 +114,8 @@ NSString *bufferToString(const void *buf, size_t len) {
 %end // end group
 
 
-void (*old_function)(int result, int a2, int a3);
-void new_function(int result, int a2, int a3) {
+void (*old_function)(__int64 result, int a2, __int64 a3);
+void new_function(__int64 result, int a2, __int64 a3) {
     NSLog(@"[new_function_test] %d | %d | %d", result, a2, a3);
     return old_function(result, a2, a3); // orig
 }
@@ -125,5 +125,6 @@ void new_function(int result, int a2, int a3) {
     %init(NetTestHooks)
 
     // Test
-    //MSHookFunction((void *)(_dyld_get_image_vmaddr_slide(0) + 0x81848), (void *)new_function, (void **)&old_function);
+    unsigned long _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x81848);
+    MSHookFunction( (void *)_sub_someFunc1, (void *)&new_function, (void **)&old_function );
 }
