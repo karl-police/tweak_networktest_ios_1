@@ -95,7 +95,7 @@ FuncType targetFunction = NULL;
 @end
 
 %hook ControlsWidget
-(void)setupControls {
+- (void)setupControls {
     %orig;
     // Create the button
     [[SimpleButtonManager sharedInstance] createButton];
@@ -103,7 +103,7 @@ FuncType targetFunction = NULL;
 %end
 
 %hook MenuMain
-(bool)isRootState {
+- (bool)isRootState {
   bool result = %orig;
 
     // Remove the button when isRootState is called
