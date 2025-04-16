@@ -108,10 +108,7 @@ int64_t new_function(int64_t result, int a2, int64_t a3) {
 
     // Test
     uintptr_t _sub_someFunc1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
-    void *_alt_sub_someFunc1 = (void *)_sub_someFunc1;
-
     NSLog(@"_sub_someFunc1: %04x", *(uint32_t *)_sub_someFunc1);
-    NSLog(@"_alt_sub_someFunc1: %04x", *(uint32_t *)_alt_sub_someFunc1);
 
-    MSHookFunction( (void *)_alt_sub_someFunc1, (void *)&new_function, (void **)&old_function );
+    MSHookFunction( (void *)_sub_someFunc1, (void *)new_function, (void **)&old_function );
 }
