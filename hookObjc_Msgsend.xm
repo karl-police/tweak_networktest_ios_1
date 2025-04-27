@@ -2,10 +2,6 @@
 
 // 参考 https://github.com/cxr0715/hook_objc_msgSend
 
-#if TARGET_OS_SIMULATOR
-#error Do not support the simulator, please use the real iPhone Device.
-#endif
-
 #include <objc/message.h>
 #include <substrate.h>
 #include <stdio.h>
@@ -104,41 +100,46 @@ __asm volatile ("ldp x8, lr, [sp], #16\n");
 
 //self 参数，不必要时，需要去掉，否则可能会崩溃。
 //不会崩溃的修改方式为：
-void printSpecificParam_fish(id self, SEL _cmd, uintptr_t param1, uintptr_t param2,uintptr_t lr,uintptr_t sp)
+void printSpecificParam_fish( SEL _cmd, uintptr_t param1, uintptr_t param2,uintptr_t lr)
 {
-
-    //const char * className = object_getClassName(self);
     const char * selector = sel_getName(_cmd);
-    //NSLog(@"class : %s, methodname : %s",className,selector);
+    
     if ( strcmp( selector, "isEqualToString:" ) == 0) {
-        NSLog(@"methodname : %s, self : %@, param1 : %@",selector,self, param1);
-    } else if ( strcmp( selector, "fileExistsAtPath:" ) == 0) {
         NSLog(@"methodname : %s, param1 : %@",selector,param1);
-    } else if ( strcmp( selector, "setObject:forKey:" ) == 0) {
-        NSLog(@"json : %@, methodname : %s, object : %@, key : %@",self, selector,param1,param2);
-    } else if ( strcmp( selector, "dataUsingEncoding:" ) == 0 ){
-        NSLog(@"self : %@, methodname : %s",self,selector);
-    } else if ( strcmp( selector, "objectForKey:" ) == 0 ){
-        NSLog(@"self : %@, methodname : %s, key : %@",self, selector,param1);
+        
+    }
+    else if ( strcmp( selector, "fileExistsAtPath:" ) == 0) {
+        NSLog(@"methodname : %s, param1 : %@",selector,param1);
+        
+    }
+    else if ( strcmp( selector, "setObject:forKey:" ) == 0) {
+        NSLog(@"json : %@, methodname : %s, object : %@, key : %@",@"notAvailable",selector,param1,param2);
+        
+    }else if ( strcmp( selector, "dataUsingEncoding:" ) == 0 ){
+        NSLog(@"class : %@, methodname : %s",@"notAvailable",selector);
+        
+    }else if ( strcmp( selector, "objectForKey:" ) == 0 ){
+        NSLog(@"methodname : %s, key : %@",selector,param1);
+        
     } else if ( strcmp( selector, "stringByAppendingString:" ) == 0 ){
-        NSLog(@"self : %@, methodname : %s,str2 : %@",self, selector,param1);
+        NSLog(@"methodname : %s,str2 : %@",selector,param1);
+        
     } else if ( strcmp( selector, "dataWithJSONObject:options:error:" ) == 0 ){
         NSLog(@"methodname : %s,json : %@",selector,param1);
+       
     } else if ( strcmp( selector, "stringWithUTF8String:" ) == 0 ){
         NSLog(@"methodname : %s,utf8str : %s",selector,param1);
+       
     } else if ( strcmp( selector, "appendFormat:" ) == 0 ){
-        NSLog(@"self : %@, methodname : %s,format : %@",self, selector,param1);
+        NSLog(@"methodname : %s,format : %@",selector,param1);
+        
     } else if ( strcmp( selector, "dictionaryWithObjectsAndKeys:" ) == 0 ){
-        //NSLog(@"class : %s, methodname : %s,object : %@, keys : %@",className,selector,param1,param2);
+        
     } else if ( strcmp( selector, "hasPrefix:" ) == 0 ){
-        NSLog(@"self : %@, methodname : %s,prefix : %@",self, selector,param1);
-    } else if ( strcmp( selector, "UTF8String" ) == 0 ){
-        NSLog(@"self : %@, methodname : %s",self, selector);
-    } else if ( strcmp( selector, "containsString:" ) == 0) {
-        NSLog(@"self : %@, methodname : %s, subStr : %@",self, selector,param1);
+        NSLog(@"methodname : %s,prefix : %@",selector,param1);
+        
     } else {
-        NSLog(@"methodname : %s",selector);
-        //NSLog(@"class : %s, methodname : %s",className,selector);
+        NSLog(@"methodname : %s",selector);  
     }
 }
 
