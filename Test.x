@@ -11,6 +11,9 @@
 #import <substrate.h>
 #import <mach-o/dyld.h>
 
+// Fishhook Test
+#import "fishhook/fishhook.h"
+
 
 typedef int64_t (*FuncType)(int64_t a1, int64_t a2, int64_t a3);
 FuncType targetFunction = NULL;
