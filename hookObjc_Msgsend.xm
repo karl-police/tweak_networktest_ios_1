@@ -164,48 +164,34 @@ uintptr_t after_objc_msgSend_inline()
 void printSpecificParam_fish( SEL _cmd, uintptr_t param1, uintptr_t param2,uintptr_t lr)
 //void printSpecificParam_fish(id self, SEL _cmd, uintptr_t param1, uintptr_t param2,uintptr_t lr)
 {
-    // 此方法中暂只能使用C方法,使用OC方法可能会导致寄存器异常导致崩溃，经测试，发生在相同方法调用相同方法时崩溃
-    // NSlog可以用
-    //const char * className = object_getClassName(self);
     const char * selector = sel_getName(_cmd);
-    //NSLog(@"class : %s, methodname : %s",className,selector);
+
     if ( strcmp( selector, "isEqualToString:" ) == 0) {
-        NSLog(@"methodname : %s, param1 : %@",selector,param1);
-        //NSLog(@"class : %s, methodname : %s, param1 : %@",className,selector,param1);
+        NSLog(@"methodname : %s, param1 : %lu", selector, param1);
     }
     else if ( strcmp( selector, "fileExistsAtPath:" ) == 0) {
-        NSLog(@"methodname : %s, param1 : %@",selector,param1);
-        //NSLog(@"class : %s, methodname : %s, param1 : %@",className,selector,param1);
+        NSLog(@"methodname : %s, param1 : %lu", selector, param1);
     }
     else if ( strcmp( selector, "setObject:forKey:" ) == 0) {
-        NSLog(@"json : %@, methodname : %s, object : %@, key : %@",@"notAvailable",selector,param1,param2);
-        //NSLog(@"json : %@, methodname : %s, object : %@, key : %@",self,selector,param1,param2);
-    }else if ( strcmp( selector, "dataUsingEncoding:" ) == 0 ){
-        NSLog(@"class : %@, methodname : %s",@"notAvailable",selector);
-        //NSLog(@"class : %@, methodname : %s",self,selector);
-    }else if ( strcmp( selector, "objectForKey:" ) == 0 ){
-        NSLog(@"methodname : %s, key : %@",selector,param1);
-        //NSLog(@"json : %@, methodname : %s, key : %@",self,selector,param1);
-    } else if ( strcmp( selector, "stringByAppendingString:" ) == 0 ){
-        NSLog(@"methodname : %s,str2 : %@",selector,param1);
-        //NSLog(@"str1 : %@, methodname : %s,str2 : %@",self,selector,param1);
-    } else if ( strcmp( selector, "dataWithJSONObject:options:error:" ) == 0 ){
-        NSLog(@"methodname : %s,json : %@",selector,param1);
-       // NSLog(@"class : %s, methodname : %s,json : %@",className,selector,param1);
-    } else if ( strcmp( selector, "stringWithUTF8String:" ) == 0 ){
-        NSLog(@"methodname : %s,utf8str : %s",selector,param1);
-       // NSLog(@"class : %s, methodname : %s,utf8str : %s",className,selector,param1);
-    } else if ( strcmp( selector, "appendFormat:" ) == 0 ){
-        NSLog(@"methodname : %s,format : %@",selector,param1);
-        //NSLog(@"class : %s, methodname : %s,format : %@",className,selector,param1);
-    } else if ( strcmp( selector, "dictionaryWithObjectsAndKeys:" ) == 0 ){
-        //NSLog(@"class : %s, methodname : %s,object : %@, keys : %@",className,selector,param1,param2);
-    } else if ( strcmp( selector, "hasPrefix:" ) == 0 ){
-        NSLog(@"methodname : %s,prefix : %@",selector,param1);
-        //NSLog(@"class : %s, methodname : %s,prefix : %@",className,selector,param1);
+        NSLog(@"json : %@, methodname : %s, object : %lu, key : %lu", @"notAvailable", selector, param1, param2);
+    } else if ( strcmp( selector, "dataUsingEncoding:" ) == 0 ) {
+        NSLog(@"class : %@, methodname : %s", @"notAvailable", selector);
+    } else if ( strcmp( selector, "objectForKey:" ) == 0 ) {
+        NSLog(@"methodname : %s, key : %lu", selector, param1);
+    } else if ( strcmp( selector, "stringByAppendingString:" ) == 0 ) {
+        NSLog(@"methodname : %s, str2 : %lu", selector, param1);
+    } else if ( strcmp( selector, "dataWithJSONObject:options:error:" ) == 0 ) {
+        NSLog(@"methodname : %s, json : %lu", selector, param1);
+    } else if ( strcmp( selector, "stringWithUTF8String:" ) == 0 ) {
+        NSLog(@"methodname : %s, utf8str : %s", selector, (const char*)param1);
+    } else if ( strcmp( selector, "appendFormat:" ) == 0 ) {
+        NSLog(@"methodname : %s, format : %lu", selector, param1);
+    } else if ( strcmp( selector, "dictionaryWithObjectsAndKeys:" ) == 0 ) {
+        // Do nothing here
+    } else if ( strcmp( selector, "hasPrefix:" ) == 0 ) {
+        NSLog(@"methodname : %s, prefix : %lu", selector, param1);
     } else {
-        NSLog(@"methodname : %s",selector);
-        //NSLog(@"class : %s, methodname : %s",className,selector);
+        NSLog(@"methodname : %s", selector);
     }
 }
 
