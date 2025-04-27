@@ -254,21 +254,11 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
         // Test
         uintptr_t _sub_func1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
         NSLog(@"_sub_func1: %04x", *(uint32_t *)_sub_func1);
-        //MSHookFunction( (void *)_sub_func1, (void *)new_function, (void **)&old_function );
-
-        Dl_info info;
-        if (dladdr((void*)_sub_func1, &info)) {
-            // Using NSLog instead of printf
-            NSLog(@"dli_sname: %@", [NSString stringWithUTF8String:info.dli_sname]);
-            NSLog(@"dli_fname: %@", [NSString stringWithUTF8String:info.dli_fname]);
-        } else {
-            NSLog(@"DEBUG_1, Nothing found.");
-        }
-
+        MSHookFunction( (void *)_sub_func1, (void *)new_function, (void **)&old_function );
     
         uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
         NSLog(@"_sub_func2: %04x", *(uint32_t *)_sub_func2);
-        //MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
+        MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
 
         uintptr_t call_test1 = (_dyld_get_image_vmaddr_slide(0) + 0x100194E6C);
         targetFunction = (FuncType)(call_test1);
