@@ -251,11 +251,11 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
     {
         // for some reason you can keep the "0x100000000" part
         // Test
-        /*uintptr_t _sub_func1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
+        uintptr_t _sub_func1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
         NSLog(@"_sub_func1: %04x", *(uint32_t *)_sub_func1);
-        MSHookFunction( (void *)_sub_func1, (void *)new_function, (void **)&old_function );
+        //MSHookFunction( (void *)_sub_func1, (void *)new_function, (void **)&old_function );
     
-        uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
+        /*uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
         NSLog(@"_sub_func2: %04x", *(uint32_t *)_sub_func2);
         MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
 
