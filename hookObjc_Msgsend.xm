@@ -230,7 +230,7 @@ static void release_stack(void *ptr) {
 // inline hook的myhook
 // TODO，现在只实现了在objc_msgSend方法前hook
 __attribute__((__naked__))
-static void hook_Objc_msgSend_inline() {
+__unused static void hook_Objc_msgSend_inline() {
 
     // before之前保存objc_msgSend的参数
     save()
