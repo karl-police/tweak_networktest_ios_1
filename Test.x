@@ -266,11 +266,11 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
         }
 
     
-        /*uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
+        uintptr_t _sub_func2 = (_dyld_get_image_vmaddr_slide(0) + 0x10026EE1C);
         NSLog(@"_sub_func2: %04x", *(uint32_t *)_sub_func2);
-        MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
+        //MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
 
         uintptr_t call_test1 = (_dyld_get_image_vmaddr_slide(0) + 0x100194E6C);
-        targetFunction = (FuncType)(call_test1);*/
+        targetFunction = (FuncType)(call_test1);
     }
 }
