@@ -226,7 +226,7 @@ int64_t new_func2(int64_t a1) {
 
 
 // The original objc_msgSend.
-static id (*orig_objc_msgSend)(id, SEL, ...) = NULL;
+__unused static id (*orig_objc_msgSend)(id, SEL, ...);
 
 id replacementObjc_msgSend(id self, SEL _sel, ...) {
     NSLog(@"[objc_msgSend Hook] [%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_sel));
