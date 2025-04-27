@@ -2,9 +2,6 @@
 
 // 参考 https://github.com/cxr0715/hook_objc_msgSend
 
-#if TARGET_OS_SIMULATOR
-#error Do not support the simulator, please use the real iPhone Device.
-#endif
 
 #include <objc/message.h>
 #include <substrate.h>
