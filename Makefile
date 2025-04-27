@@ -13,7 +13,7 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = tweak_test_1
 
 
-$(TWEAK_NAME)_FILES = $(wildcard *.x) $(wildcard *.xm) $(wildcard */*.c) $(wildcard *.c)
+$(TWEAK_NAME)_FILES = $(wildcard *.x) $(wildcard *.xm) $(wildcard *.mm) $(wildcard */*.c) $(wildcard *.c)
 $(TWEAK_NAME)_LOGOS_DEFAULT_GENERATOR = internal
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
 
