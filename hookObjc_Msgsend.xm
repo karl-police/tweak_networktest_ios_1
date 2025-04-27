@@ -10,6 +10,12 @@
 #include <substrate.h>
 #include <stdio.h>
 #include <pthread.h>
+#import <Foundation/Foundation.h>
+#import <sys/types.h>
+#import <sys/socket.h>
+#import <netdb.h>
+#import <errno.h>
+#import <stdint.h>
 
 #import "fishhook/fishhook.h"
 
