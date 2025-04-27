@@ -241,13 +241,17 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
 %ctor {
     %init(NetTestHooks)
 
-    MSHookFunction(&objc_msgSend, (void*)replacementObjc_msgSend, (void**)&orig_objc_msgSend);
+    //MSHookFunction(&objc_msgSend, (void*)replacementObjc_msgSend, (void**)&orig_objc_msgSend);
+    // 1 rebinding
+    rebind_symbols((struct rebinding[1]){
+        {"objc_msgSend", (void *)replacementObjc_msgSend, (void **)&orig_objc_msgSend},
+    }, 1);
 
     @autoreleasepool
     {
         // for some reason you can keep the "0x100000000" part
         // Test
-        uintptr_t _sub_func1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
+        /*uintptr_t _sub_func1 = (_dyld_get_image_vmaddr_slide(0) + 0x100081848);
         NSLog(@"_sub_func1: %04x", *(uint32_t *)_sub_func1);
         MSHookFunction( (void *)_sub_func1, (void *)new_function, (void **)&old_function );
     
@@ -256,6 +260,6 @@ id replacementObjc_msgSend(id self, SEL _sel, ...) {
         MSHookFunction( (void *)_sub_func2, (void *)new_function, (void **)&old_function );
 
         uintptr_t call_test1 = (_dyld_get_image_vmaddr_slide(0) + 0x100194E6C);
-        targetFunction = (FuncType)(call_test1);
+        targetFunction = (FuncType)(call_test1);*/
     }
 }
