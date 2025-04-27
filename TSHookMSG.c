@@ -72,11 +72,11 @@ static struct rebindings_entry *_rebindings_head;
 static int prepend_rebindings(struct rebindings_entry **rebindings_head,
                               struct rebinding rebindings[],
                               size_t nel) {
-    struct rebindings_entry *new_entry = malloc(sizeof(struct rebindings_entry));
+    struct rebindings_entry *new_entry = (struct rebindings_entry *)malloc(sizeof(struct rebindings_entry));
     if (!new_entry) {
         return -1;
     }
-    new_entry->rebindings = malloc(sizeof(struct rebinding) * nel);
+    new_entry->rebindings = (struct rebinding *)malloc(sizeof(struct rebinding) * nel);
     if (!new_entry->rebindings) {
         free(new_entry);
         return -1;
@@ -261,7 +261,7 @@ static inline thread_call_stack * get_thread_call_stack() {
         cs->stack = (thread_call_record *)calloc(128, sizeof(thread_call_record));
         cs->allocated_length = 64;
         cs->index = -1;
-        cs->is_main_thread = pthread_main_np();
+        cs->is_main_thread = pthread_main_np(); //如果是如线程，返回非0值
         pthread_setspecific(_thread_key, cs);
     }
     return cs;
@@ -312,12 +312,12 @@ static inline uintptr_t pop_call_record() {
 //        if (cost > _min_time_cost && cs->index < _max_call_depth) {
             if (!_smCallRecords) {
                 _smRecordAlloc = 1024;
-                _smCallRecords = malloc(sizeof(smCallRecord) * _smRecordAlloc);
+                _smCallRecords = (smCallRecord *)malloc(sizeof(smCallRecord) * _smRecordAlloc);
             }
             _smRecordNum++;
             if (_smRecordNum >= _smRecordAlloc) {
                 _smRecordAlloc += 1024;
-                _smCallRecords = realloc(_smCallRecords, sizeof(smCallRecord) * _smRecordAlloc);
+                _smCallRecords = (smCallRecord *)realloc(_smCallRecords, sizeof(smCallRecord) * _smRecordAlloc);
             }
             smCallRecord *log = &_smCallRecords[_smRecordNum - 1];
             log->cls = pRecord->cls;
@@ -329,12 +329,77 @@ static inline uintptr_t pop_call_record() {
     return pRecord->lr;
 }
 
-void before_objc_msgSend(id self, SEL _cmd, uintptr_t lr) {
+void printSpecificParam(id self, SEL _cmd, uintptr_t param1, uintptr_t param2,uintptr_t lr)
+{
+    // 此方法中暂只能使用C方法,使用OC方法可能会导致寄存器异常导致崩溃，经测试，发生在相同方法调用相同方法时崩溃
+    // NSlog可以用
+    const char * className = object_getClassName(self);
+    const char * selector = sel_getName(_cmd);
+    //NSLog(@"class : %s, methodname : %s",className,selector);
+    if ( strcmp( selector, "isEqualToString:" ) == 0) {
+        NSLog(@"class : %s, methodname : %s, param1 : %@",className,selector,param1);
+    }
+    else if ( strcmp( selector, "fileExistsAtPath:" ) == 0) {
+        NSLog(@"class : %s, methodname : %s, param1 : %@",className,selector,param1);
+    }
+    else if ( strcmp( selector, "setObject:forKey:" ) == 0) {
+        NSLog(@"json : %@, methodname : %s, object : %@, key : %@",self,selector,param1,param2);
+    }else if ( strcmp( selector, "dataUsingEncoding:" ) == 0 ){
+        NSLog(@"class : %@, methodname : %s",self,selector);
+    }else if ( strcmp( selector, "objectForKey:" ) == 0 ){
+        NSLog(@"json : %@, methodname : %s, key : %@",self,selector,param1);
+    } else if ( strcmp( selector, "stringByAppendingString:" ) == 0 ){
+        NSLog(@"str1 : %@, methodname : %s,str2 : %@",self,selector,param1);
+    } else if ( strcmp( selector, "dataWithJSONObject:options:error:" ) == 0 ){
+        NSLog(@"class : %s, methodname : %s,json : %@",className,selector,param1);
+    } else if ( strcmp( selector, "stringWithUTF8String:" ) == 0 ){
+        NSLog(@"class : %s, methodname : %s,utf8str : %s",className,selector,param1);
+    } else if ( strcmp( selector, "appendFormat:" ) == 0 ){
+        NSLog(@"class : %s, methodname : %s,format : %@",className,selector,param1);
+    } else if ( strcmp( selector, "dictionaryWithObjectsAndKeys:" ) == 0 ){
+        //NSLog(@"class : %s, methodname : %s,object : %@, keys : %@",className,selector,param1,param2);
+    } else {
+        NSLog(@"class : %s, methodname : %s",className,selector);
+    }
+}
+
+void before_objc_msgSend(id self, SEL _cmd, uintptr_t param1, uintptr_t param2, uintptr_t lr) {
+    if (self) {
+        printSpecificParam(self, _cmd, param1, param2,lr);
+    }
     push_call_record(self, object_getClass(self), _cmd, lr);
 }
 
-uintptr_t after_objc_msgSend() {
+uintptr_t after_objc_msgSend(uintptr_t ret) {
+    //NSLog(@"after objc_msgSend");
+    //NSLog(@"ret value : %@",ret);
     return pop_call_record();
+}
+
+//打印截止目前的OC方法
+ void loadRecords() {
+//    NSMutableArray<SMCallTraceTimeCostModel *> *arr = [NSMutableArray new];
+    NSString *className;
+    NSString *methodName;
+    BOOL isClassMethod;
+    NSTimeInterval timeCost;
+    NSUInteger callDepth;
+    NSString *path;
+    BOOL lastCall;
+    NSUInteger frequency;
+    int num = 0;
+    smCallRecord *records = smGetCallRecords(&num);
+    for (int i = 0; i < num; i++) {
+        smCallRecord *rd = &records[i];
+//        SMCallTraceTimeCostModel *model = [SMCallTraceTimeCostModel new];
+        className = NSStringFromClass(rd->cls);
+        methodName = NSStringFromSelector(rd->sel);
+        isClassMethod = class_isMetaClass(rd->cls);
+        timeCost = (double)rd->time / 1000000.0;
+        callDepth = rd->depth;
+//        [arr addObject:model];
+        NSLog(@"className:%@,methodName:%@,timeCost:%f",className,methodName,timeCost);
+    }
 }
 
 
@@ -378,8 +443,7 @@ static void hook_Objc_msgSend() {
     // Save parameters.
     save()
     
-    __asm volatile ("mov x2, lr\n");
-    __asm volatile ("mov x3, x4\n");
+    __asm volatile ("mov x4, lr\n");
     
     // Call our before_objc_msgSend.
     call(blr, &before_objc_msgSend)
